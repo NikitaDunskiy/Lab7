@@ -166,7 +166,27 @@ public class MainFrame extends JFrame {
             final String destinationAddress = textFieldTo.getText();
             final String message = textAreaOutgoing.getText();
 // Убеждаемся, что поля не пустые
+            if (senderName.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        "Введите имя отправителя", "Ошибка",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
+            if (destinationAddress.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        "Введите адрес узла-получателя", "Ошибка",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            if (message.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        "Введите текст сообщения", "Ошибка",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
 // Создаем сокет для соединения
             final Socket socket =
                     new Socket(destinationAddress, SERVER_PORT);
