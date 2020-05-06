@@ -74,6 +74,7 @@ public class MainFrame extends JFrame {
         sendButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                sendMessage();
             }
         });
 // Компоновка элементов панели "Сообщение"
@@ -158,6 +159,43 @@ public class MainFrame extends JFrame {
         }).start();
     }
 
+    private void sendMessage() {
+        try {
+// Получаем необходимые параметры
+            final String senderName = textFieldFrom.getText();
+            final String destinationAddress = textFieldTo.getText();
+            final String message = textAreaOutgoing.getText();
+// Убеждаемся, что поля не пустые
+
+// Создаем сокет для соединения
+            final Socket socket =
+                    new Socket(destinationAddress, SERVER_PORT);
+// Открываем поток вывода данных
+            final DataOutputStream out =
+                    new DataOutputStream(socket.getOutputStream());
+// Записываем в поток имя
+            out.writeUTF(senderName);
+// Записываем в поток сообщение
+            out.writeUTF(message);
+// Закрываем сокет
+            socket.close();
+// Помещаем сообщения в текстовую область вывода
+            textAreaIncoming.append("Я -> " + destinationAddress + ": "
+                    + message + "\n");
+// Очищаем текстовую область ввода сообщения
+            textAreaOutgoing.setText("");
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(MainFrame.this,
+                    "Не удалось отправить сообщение: узел-адресат не найден",
+                    "Ошибка", JOptionPane.ERROR_MESSAGE);
+        } catch (IOException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(MainFrame.this,
+                    "Не удалось отправить сообщение", "Ошибка",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
