@@ -186,7 +186,28 @@ public class MainFrame extends JFrame {
                         JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            
+            if(!destinationAddress.isEmpty()) {
+                destinationAddress.trim();
+                String[] nuder = destinationAddress.split("\\.");
+                if (nuder.length > 4) {
+                    JOptionPane.showMessageDialog(this,
+                            "Неверно введен IP. Больше 4 чисел", "Ошибка",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }
+            int count = 0;
+            String[] nuder = destinationAddress.split("\\.");
+            for (String number : nuder){
+                int num = Integer.parseInt(number);
+                count ++;
+                if(num > 255){
+                    JOptionPane.showMessageDialog(this,
+                            "Неверно введен IP. Ошибка в записи числа " + count,  "Ошибка",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }
 // Создаем сокет для соединения
             final Socket socket =
                     new Socket(destinationAddress, SERVER_PORT);
